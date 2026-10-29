@@ -1,0 +1,41 @@
+Content/Fonts/SignFont.spritesheet.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.FontDescriptionImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.FontDescriptionProcessor
+    premultiplyAlpha: true
+    textureFormat: Compressed
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Fonts/SignFont.spritesheet.spritefont: 2026-10-22T22:34:29.0942785Z
+  outputs:
+    Content/Fonts/SignFont.spritesheet.xnb: 2026-10-22T22:34:52.0575840Z
+Content/Fonts/impact.ttf:
+  contentRoot: Content
+  shouldBuild: false
+  importer: 
+  processor: 
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Fonts/impact.ttf: 2024-04-01T07:22:09.5909705Z
+  outputs:
+    Content/Fonts/impact.ttf: 2024-04-01T07:22:09.5909705Z
+Content/Fonts/TitleFont.spritesheet.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.FontDescriptionImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.FontDescriptionProcessor
+    premultiplyAlpha: true
+    textureFormat: Compressed
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Fonts/TitleFont.spritesheet.spritefont: 2026-10-22T22:34:42.1904637Z
+  outputs:
+    Content/Fonts/TitleFont.spritesheet.xnb: 2026-10-22T22:34:52.1699255Z
