@@ -35,6 +35,11 @@ public class hog : EnemyCharacter
         
         //attack selector
         attackSelect = 1;
+
+        //Chances
+        dodgeChance = 10;
+        critChance = 10;
+        missChance = 10;
     }
     public override int attackSelector(Random rng)
     {
@@ -81,7 +86,31 @@ public class hog : EnemyCharacter
 
     public override void useSkillOne(List<Character> targets, Random rng, TurnManager turnManager)
     {
+        if (targets == null || targets.Count == 0)
+        {
+            return;
+        }
 
+        for(int targetIndex = 0; targetIndex < targets.Count; targetIndex++)
+        {
+            Combatant target = targets[targetIndex];
+
+            double staticDamage = 2 * (1 + (this.strength * 0.05));
+            double rolledDamage = staticDamage * (rng.Next(7,14) /10.0);
+
+            if (target.currentHealth > rolledDamage)
+                target.currentHealth -= rolledDamage;              
+
+            else
+                target.currentHealth = 0;
+
+        }
+
+        currentMana-= 2;
+        ability1CoolDown = 3;
+
+        turnManager.isTurnDone = true;
+        turnManager.advanceTurn();
     }
 
 }

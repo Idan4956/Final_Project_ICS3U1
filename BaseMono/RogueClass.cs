@@ -21,20 +21,17 @@ public class rogue : Character
 
         //cooldown
         ability2CoolDown = 0;
+
+        //Chances
+        dodgeChance = 10;
+        critChance = 10;
+        missChance = 10;
     }
 
     //Abilities
-        public override void useSkillOne(List<Character> targets, int targetIndex, Random rng, TurnManager turnManager)
+        public override void useSkillOne(Combatant target, Random rng, TurnManager turnManager)
         {
-            //Check for safety
-            if (targets == null || targetIndex < 0 || targetIndex >= targets.Count)
-            {
-                return;
-            }
-
             //Start attack logic
-            Character target = targets[targetIndex];
-
             if (currentMana >= 1)
             {
                 currentMana --;
@@ -59,25 +56,26 @@ public class rogue : Character
             }
         }
 
-        public override void useSkillTwo(List<Character> targets, int targetIndex, Random rng, TurnManager turnManager)
+        public override void useSkillTwo(IReadOnlyList<Combatant> targets, Random rng, TurnManager turnManager)
         {
-            //Check
-            if(targets == null || targetIndex < 0 || targetIndex >= targets.Count)
+            if (targets == null || targets.Count == 0)
             {
                 return;
             }
 
             //Start hidden logic
-            Character target = targets[targetIndex];
-
             if (currentMana >= 2 && ability2CoolDown <= 0)
             {
                 currentMana -= 2;
+                for(int targetIndex = 0; targetIndex < targets.Count; targetIndex++)
+                {
+                    Combatant target = targets[targetIndex];
 
-                target.hiddenStacks += 2;
+                    target.hiddenStacks += 2;
+                }
 
                 ability2CoolDown = 4;
-
+                
                 turnManager.isTurnDone = true;
                 turnManager.advanceTurn();
             }

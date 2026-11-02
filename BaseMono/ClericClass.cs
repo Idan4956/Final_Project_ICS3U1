@@ -21,20 +21,17 @@ public class cleric : Character
 
         //cooldown
         ability2CoolDown = 0;
+
+        //Chances
+        dodgeChance = 10;
+        critChance = 10;
+        missChance = 10;
     }
 
     //Abilities
-        public override void useSkillOne(List<Character> targets, int targetIndex, Random rng, TurnManager turnManager)
+        public override void useSkillOne(Combatant target, Random rng, TurnManager turnManager)
         {
-            //Check for safety
-            if (targets == null || targetIndex < 0 || targetIndex >= targets.Count)
-            {
-                return;
-            }
-
             //Start heal logic
-            Character target = targets[targetIndex];
-
             if (currentMana >= 1)
             {
                 currentMana --;
@@ -52,27 +49,26 @@ public class cleric : Character
             }
         }
 
-        public override void useSkillTwo(List<Character> targets, int targetIndex, Random rng, TurnManager turnManager)
+        public override void useSkillTwo(IReadOnlyList<Combatant> targets, Random rng, TurnManager turnManager)
         {
-            //Check
-            if(targets == null || targetIndex < 0 || targetIndex >= targets.Count)
+            if (targets == null || targets.Count == 0)
             {
                 return;
             }
 
             //Start heal logic
-            Character target = targets[targetIndex];
-
             if (currentMana >= 2 && ability2CoolDown <= 0)
             {
                 currentMana -= 2;
-
-                double staticHeal = 6 * (1 + (dexterity * 0.04));
-                double rolledHeal = (staticHeal * (1 + (rng.Next(7, 14) / 10.0)));
-
-                if (target.currentHealth > 0.0)
+                for (int targetIndex = 0; targetIndex < targets.Count; targetIndex++)
                 {
-                    target.currentHealth += rolledHeal;
+                    Combatant target = targets[targetIndex];
+
+                    double staticHeal = 6 * (1 + (dexterity * 0.04));
+                    double rolledHeal = (staticHeal * (1 + (rng.Next(7, 14) / 10.0)));
+
+                    if (target.currentHealth > 0.0)
+                        target.currentHealth += rolledHeal;
                 }
 
                 ability2CoolDown = 3;

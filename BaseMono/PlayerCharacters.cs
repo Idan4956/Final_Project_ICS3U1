@@ -2,37 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
-public abstract class Character
+public abstract class Character : Combatant
 {
-    //Basic Info
-    public string name { get; set;}
-    public double maxHealth { get; set;}
-    public double currentHealth { get; set;}
-    public int maxMana { get; set;}
-    public int currentMana { get; set;}
-
-    //Stats
-    public int strength { get; set;}
-    public int dexterity { get; set;}
-    public int constitution { get; set;}
-    public int intelligence { get; set;}
-    public int faith { get; set;}
-
-    //Status effects length
-    public int trappedStacks { get; set;}
-    public int burnStacks { get; set;}
-    public int tauntStacks { get; set;}
-    public int regenStacks { get; set;}
-    public int bleedStacks { get; set;}
-    public int poisonStacks { get; set;}
-    public int hiddenStacks { get; set;}
-    public int guardStacks { get; set;}
-
     //CoolDown
     public int ability2CoolDown { get; set;}
 
     //Basic Attacks
-    public virtual void basicStrike(Character target, Random rng, TurnManager turnManager)
+    public virtual void basicStrike(Combatant target, Random rng, TurnManager turnManager)
     {
         double staticDamage = 4 * (1 + (this.strength * 0.05));
 
@@ -71,7 +47,7 @@ public abstract class Character
 
 
     //Abilities
-    public abstract void useSkillOne(List<Character> targets, int targetIndex, Random rng, TurnManager turnManager);
-    public abstract void useSkillTwo(List<Character> targets, int targetIndex, Random rng, TurnManager turnManager);
+    public abstract void useSkillOne(Combatant target, Random rng, TurnManager turnManager);
+    public abstract void useSkillTwo(IReadOnlyList<Combatant> targets, Random rng, TurnManager turnManager);
 
 }

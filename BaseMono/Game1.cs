@@ -4,12 +4,14 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using System;
+using System.Collections.Generic;
 using GameUtility;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
+using System.Security.Cryptography.X509Certificates;
 
 namespace BaseMono;
 
-public class Game1 : Game
+public class Game1 : Game 
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
@@ -33,6 +35,7 @@ public class Game1 : Game
     public const int INVENTORY = 5;
     public const int VICTORY = 6;
     public const int DEFEAT = 7;
+    
 
     public Game1()
     {
@@ -58,7 +61,35 @@ public class Game1 : Game
         screenWidth = _graphics.GraphicsDevice.Viewport.Width;
         screenHeight = _graphics.GraphicsDevice.Viewport.Height;
 
+        RunCombatSmokeTest();
+
         base.Initialize();
+    }
+
+    private static void RunCombatSmokeTest()
+    {
+        var caster = new wizard("Smoke test caster") { currentMana = 4 };
+        var target = new fighter("Smoke test target");
+
+        Combatant[] targets = {caster, target};
+
+        var turnManager = new TurnManager();
+        turnManager.allCombatants.Add(caster);
+        turnManager.allCombatants.Add(target);
+
+        Combatant[] selectedTargets = {target};
+
+        double startingHealth = target.currentHealth;
+
+        caster.useSkillTwo(selectedTargets, rng, turnManager);
+
+        if (caster.currentMana != 2 || target.currentHealth >= startingHealth ||
+            target.poisonStacks != 2 || turnManager.currentCharacter != 1)
+        {
+            throw new InvalidOperationException("Combat smoke test failed.");
+        }
+
+        System.Diagnostics.Debug.WriteLine("Combat smoke test passed: skill cost, damage, poison, and turn advance.");
     }
 
     protected override void LoadContent()
@@ -99,6 +130,7 @@ public class Game1 : Game
 
             case FIGHT:
             //Put player on fight Screen
+            
             break;
 
             case INVENTORY:

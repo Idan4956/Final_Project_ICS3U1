@@ -560,3 +560,5 @@ C:\Users\idans\Desktop\ICS-3\Assignments\FinalProjectPractice\Builder\obj\Debug\
 C:\Users\idans\Desktop\ICS-3\Assignments\FinalProjectPractice\Builder\obj\Debug\Builder.pdb
 C:\Users\idans\Desktop\ICS-3\Assignments\FinalProjectPractice\Builder\obj\Debug\Builder.genruntimeconfig.cache
 C:\Users\idans\Desktop\ICS-3\Assignments\FinalProjectPractice\Builder\obj\Debug\ref\Builder.dll
+C:\Users\idans\Desktop\ICS-3\Assignments\FinalProjectPractice\Builder\obj\Debug\Builder.csproj.CoreCompileInputs.cache
+C:\Users\idans\Desktop\ICS-3\Assignments\FinalProjectPractice\Builder\obj\Debug\Builder.sourcelink.json

@@ -3,16 +3,19 @@ using System.Collections.Generic;
 
 public class Effects
 { 
+    
+    
     private readonly TurnManager TurnManager;
-
-    public Effects (TurnManager turnManager)
+    public Effects(TurnManager turnManager)
     {
+        TurnManager = turnManager;
+    }
+    
         public double poisonDmg { get; set;}
         public double bleedDmg { get; set;}
         public double burnDmg { get; set;}
         public double regenHeal { get; set;}
-        public double hiddenEffect { get; set;}
-        public double trappedEffect { get; set;}
+        public bool trappedEffect { get; set;}
         
         public double poisonDamage()
         {
@@ -56,26 +59,11 @@ public class Effects
 
             return  regenHeal;
         }
-        public double HiddenEffect()
+        public bool TrappedEffect()
         {
             
-            //Work from here on out
+            trappedEffect = this.TurnManager.allCombatants[this.TurnManager.currentCharacter].trueHit = true;
 
-            hiddenEffect = this.TurnManager.allCombatants[this.TurnManager.currentCharacter].;
-
-
-            return hiddenEffect;
+            return  trappedEffect;
         }
-        public double TrappedEffect()
-        {
-            if (this.TurnManager.allCombatants[this.TurnManager.currentCharacter].currentHealth * 0.07 > 3)
-                bleedDmg = this.TurnManager.allCombatants[this.TurnManager.currentCharacter].currentHealth * 0.07 ;
-            else if (this.TurnManager.allCombatants[this.TurnManager.currentCharacter].currentHealth >0)
-                    bleedDmg = 1;
-            else 
-                poisonDmg = 0;
-
-            return  poisonDmg;
-        }
-    }
 }

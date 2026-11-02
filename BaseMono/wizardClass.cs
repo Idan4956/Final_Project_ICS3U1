@@ -21,20 +21,18 @@ public class wizard : Character
 
         //cooldown
         ability2CoolDown = 0;
+
+        //Chances
+        dodgeChance = 10;
+        critChance = 10;
+        missChance = 10;
     }
 
     //Abilities
-        public override void useSkillOne(List<Character> targets, int targetIndex, Random rng, TurnManager turnManager)
+        public override void useSkillOne(Combatant target, Random rng, TurnManager turnManager)
         {
-            //Check for safety
-            if (targets == null || targetIndex < 0 || targetIndex >= targets.Count)
-            {
-                return;
-            }
-
+            
             //Start attack logic
-            Character target = targets[targetIndex];
-
             if (currentMana >= 1)
             {
                 currentMana --;
@@ -59,35 +57,33 @@ public class wizard : Character
             }
         }
 
-        public override void useSkillTwo(List<Character> targets, int targetIndex, Random rng, TurnManager turnManager)
+        public override void useSkillTwo(IReadOnlyList<Combatant> targets, Random rng, TurnManager turnManager)
         {
-            //Check
-            if(targets == null || targetIndex < 0 || targetIndex >= targets.Count)
+            if (targets == null || targets.Count == 0)
             {
                 return;
             }
 
             //Start attack logic
-            Character target = targets[targetIndex];
-
             if (currentMana >= 2 && ability2CoolDown <= 0)
             {
                 currentMana -= 2;
-
-                double staticDamage = 2 * (1 + (intelligence * 0.04));
-                double rolledDamage = (staticDamage * (1 + (rng.Next(7, 14) / 10.0)));
-
-                if (target.currentHealth > rolledDamage)
+                for (int targetIndex = 0; targetIndex < targets.Count; targetIndex++)
                 {
-                    target.currentHealth -= rolledDamage;
+                    Combatant target = targets[targetIndex];
 
-                    target.poisonStacks += 2;
-                }
-                else 
-                {
-                    target.currentHealth = 0;
-                }
+                    double staticDamage = 2 * (1 + (intelligence * 0.04));
+                    double rolledDamage = (staticDamage * (1 + (rng.Next(7, 14) / 10.0)));
 
+                    if (target.currentHealth > rolledDamage)
+                    {
+                        target.currentHealth -= rolledDamage;
+                        target.poisonStacks += 2;
+                    }
+                    else 
+                        target.currentHealth = 0;
+                }
+                
                 ability2CoolDown = 3;
 
                 turnManager.isTurnDone = true;

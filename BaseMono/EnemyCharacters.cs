@@ -2,31 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
-public abstract class EnemyCharacter
+public abstract class EnemyCharacter : Combatant
 {
-    //Basic Info
-    public string name { get; set;}
-    public double maxHealth { get; set;}
-    public double currentHealth { get; set;}
-    public int maxMana { get; set;}
-    public int currentMana { get; set;}
-
-    //Stats
-    public int strength { get; set;}
-    public int dexterity { get; set;}
-    public int constitution { get; set;}
-    public int intelligence { get; set;}
-    public int faith { get; set;}
-
-    //Status effects
-    public int trappedStacks { get; set;}
-    public int burnStacks { get; set;}
-    public int tauntStacks { get; set;}
-    public int regenStacks { get; set;}
-    public int bleedStacks { get; set;}
-    public int poisonStacks { get; set;}
-    public int hiddenStacks { get; set;}
-    public int guardStacks { get; set;}
 
     //CoolDown
     public int ability1CoolDown { get; set;}
