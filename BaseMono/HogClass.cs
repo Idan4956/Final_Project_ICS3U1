@@ -95,7 +95,7 @@ public class hog : EnemyCharacter
         {
             Combatant target = targets[targetIndex];
 
-            double staticDamage = 2 * (1 + (this.strength * 0.05));
+            double staticDamage = 6 * (1 + (this.strength * 0.05));
             double rolledDamage = staticDamage * (rng.Next(7,14) /10.0);
 
             if (target.currentHealth > rolledDamage)
