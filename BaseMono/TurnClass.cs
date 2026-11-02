@@ -61,14 +61,14 @@ public class TurnManager
     }
 
     public void advanceTurn ()
-    {
-        if (isTurnDone == true && currentCharacter <= allCombatants.Count)
+    {   if (!isTurnDone || allCombatants.Count == 0)
+        if (isTurnDone == true && currentCharacter < allCombatants.Count)
         {
             isTurnDone = false;
 
             currentCharacter++;
         }
-        else if (isTurnDone == true && currentCharacter > allCombatants.Count)
+        else if (isTurnDone == true && currentCharacter >= allCombatants.Count)
         {
             isTurnDone = false;
 
