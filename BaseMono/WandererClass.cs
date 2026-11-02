@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 
-public class hog : EnemyCharacter
+public class wanderer : EnemyCharacter
 {
-    public hog (string hogName, Random rng)
+    public wanderer (string wandererName, Random rng)
     {
         //Initial info
-        name = hogName;
+        name = wandererName;
         maxHealth = rng.Next(20, 36);
         currentHealth = maxHealth;
         maxMana = 4;

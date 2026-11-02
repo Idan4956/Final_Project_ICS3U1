@@ -1,4 +1,4 @@
-eusing System;
+using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 
@@ -96,7 +96,7 @@ public class bee : EnemyCharacter
             Combatant target = targets[targetIndex];
 
             double staticDamage = 4 * (1 + (this.faith * 0.05));
-            double rolledHeal = staticHeal * (rng.Next(7,14) /10.0);
+            double rolledHeal = staticDamage * (rng.Next(7,14) /10.0);
 
             target.poisonStacks += 2;
 
