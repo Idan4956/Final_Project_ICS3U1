@@ -39,3 +39,203 @@ Content/Fonts/TitleFont.spritesheet.xnb:
     Fonts/TitleFont.spritesheet.spritefont: 2026-10-22T22:34:42.1904637Z
   outputs:
     Content/Fonts/TitleFont.spritesheet.xnb: 2026-11-02T19:38:45.9282680Z
+Content/Images/Backgrounds/ForestBG.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.TextureImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.TextureProcessor
+    colorKeyColor: 255,0,255,255
+    colorKeyEnabled: true
+    generateMipmaps: false
+    premultiplyAlpha: true
+    resizeToPowerOfTwo: false
+    makeSquare: false
+    textureFormat: Color
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Images/Backgrounds/ForestBG.jpg: 2026-11-02T23:36:55.4868534Z
+  outputs:
+    Content/Images/Backgrounds/ForestBG.xnb: 2026-11-03T13:29:57.8096474Z
+Content/Images/Sprites/ClericImg.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.TextureImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.TextureProcessor
+    colorKeyColor: 255,0,255,255
+    colorKeyEnabled: true
+    generateMipmaps: false
+    premultiplyAlpha: true
+    resizeToPowerOfTwo: false
+    makeSquare: false
+    textureFormat: Color
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Images/Sprites/ClericImg.png: 2026-11-02T23:48:14.0788075Z
+  outputs:
+    Content/Images/Sprites/ClericImg.xnb: 2026-11-03T13:29:58.0628550Z
+Content/Images/Sprites/FighterImg.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.TextureImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.TextureProcessor
+    colorKeyColor: 255,0,255,255
+    colorKeyEnabled: true
+    generateMipmaps: false
+    premultiplyAlpha: true
+    resizeToPowerOfTwo: false
+    makeSquare: false
+    textureFormat: Color
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Images/Sprites/FighterImg.png: 2026-11-02T23:53:50.9382507Z
+  outputs:
+    Content/Images/Sprites/FighterImg.xnb: 2026-11-03T13:29:58.2305614Z
+Content/Images/Sprites/HogImg.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.TextureImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.TextureProcessor
+    colorKeyColor: 255,0,255,255
+    colorKeyEnabled: true
+    generateMipmaps: false
+    premultiplyAlpha: true
+    resizeToPowerOfTwo: false
+    makeSquare: false
+    textureFormat: Color
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Images/Sprites/HogImg.png: 2026-11-02T23:48:19.0043620Z
+  outputs:
+    Content/Images/Sprites/HogImg.xnb: 2026-11-03T13:29:58.3020630Z
+Content/Images/Sprites/PixieImg.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.TextureImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.TextureProcessor
+    colorKeyColor: 255,0,255,255
+    colorKeyEnabled: true
+    generateMipmaps: false
+    premultiplyAlpha: true
+    resizeToPowerOfTwo: false
+    makeSquare: false
+    textureFormat: Color
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Images/Sprites/PixieImg.png: 2026-11-02T23:48:22.1948251Z
+  outputs:
+    Content/Images/Sprites/PixieImg.xnb: 2026-11-03T13:29:58.4658043Z
+Content/Images/Sprites/RangerImg.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.TextureImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.TextureProcessor
+    colorKeyColor: 255,0,255,255
+    colorKeyEnabled: true
+    generateMipmaps: false
+    premultiplyAlpha: true
+    resizeToPowerOfTwo: false
+    makeSquare: false
+    textureFormat: Color
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Images/Sprites/RangerImg.png: 2026-11-02T23:54:25.5455862Z
+  outputs:
+    Content/Images/Sprites/RangerImg.xnb: 2026-11-03T13:29:58.6262840Z
+Content/Images/Sprites/RogueImg.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.TextureImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.TextureProcessor
+    colorKeyColor: 255,0,255,255
+    colorKeyEnabled: true
+    generateMipmaps: false
+    premultiplyAlpha: true
+    resizeToPowerOfTwo: false
+    makeSquare: false
+    textureFormat: Color
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Images/Sprites/RogueImg.png: 2026-11-02T23:55:43.7816732Z
+  outputs:
+    Content/Images/Sprites/RogueImg.xnb: 2026-11-03T13:29:58.7717461Z
+Content/Images/Sprites/WandererImg.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.TextureImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.TextureProcessor
+    colorKeyColor: 255,0,255,255
+    colorKeyEnabled: true
+    generateMipmaps: false
+    premultiplyAlpha: true
+    resizeToPowerOfTwo: false
+    makeSquare: false
+    textureFormat: Color
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Images/Sprites/WandererImg.png: 2026-11-02T23:51:55.2360797Z
+  outputs:
+    Content/Images/Sprites/WandererImg.xnb: 2026-11-03T13:29:58.9522669Z
+Content/Images/Sprites/WizardImg.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.TextureImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.TextureProcessor
+    colorKeyColor: 255,0,255,255
+    colorKeyEnabled: true
+    generateMipmaps: false
+    premultiplyAlpha: true
+    resizeToPowerOfTwo: false
+    makeSquare: false
+    textureFormat: Color
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Images/Sprites/WizardImg.png: 2026-11-02T23:51:50.0898895Z
+  outputs:
+    Content/Images/Sprites/WizardImg.xnb: 2026-11-03T13:29:59.0974738Z
+Content/Images/Sprites/BeeImg.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.TextureImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.TextureProcessor
+    colorKeyColor: 255,0,255,255
+    colorKeyEnabled: true
+    generateMipmaps: false
+    premultiplyAlpha: true
+    resizeToPowerOfTwo: false
+    makeSquare: false
+    textureFormat: Color
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Images/Sprites/BeeImg.png: 2026-11-03T17:07:24.0047563Z
+  outputs:
+    Content/Images/Sprites/BeeImg.xnb: 2026-11-03T17:08:01.5969246Z

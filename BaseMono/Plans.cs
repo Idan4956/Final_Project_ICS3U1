@@ -1,6 +1,8 @@
 /*Organizer:
 Immediate goals:
 
+GENERATE THE BEE IMG
+
 Also need to figure out how to make it so that any potential stats of the player are taken into the calculations of damage (What did I mean?)
 
 Idea: - Get the rolledDmg and check for a miss, put it into the respective damagetype calculation, and send it to the character to calculate any misses

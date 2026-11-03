@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using GameUtility;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
 using System.Security.Cryptography.X509Certificates;
+using System.Net.Mime;
 
 namespace BaseMono;
 
@@ -25,7 +27,7 @@ public class Game1 : Game
     //Random num generator
     static Random rng = new Random();
 
-    int gameState = 0;
+    int gameState = 1;
 
     public const int INTRO = 0;
     public const int PLAYERNUMSELECT = 1;
@@ -36,6 +38,50 @@ public class Game1 : Game
     public const int VICTORY = 6;
     public const int DEFEAT = 7;
     
+    Texture2D forestBG;
+
+    Rectangle forestBGRec;
+
+    ////Player Num Select
+    int playerSelectNum = 1;
+
+    string playerSelect = "1";
+    string playerSelectUp = "+";
+    string playerSelectDown = "-";
+    string playerSelectConfirm = "Confirm";
+
+    Vector2 playerSelectLoc =  new Vector2(500, 500);
+    Vector2 playerSelectUpLoc =  new Vector2(450, 500);
+    Vector2 playerSelectDownLoc =  new Vector2(550, 500);
+    Vector2 playerSelectConfirmLoc =  new Vector2(500, 600);
+
+    Rectangle playerSelectUpRec = new Rectangle (450, 500, 50, 50);
+    Rectangle playerSelectDownRec = new Rectangle (550, 500, 50, 50);
+    Rectangle playerSelectConfirmRec = new Rectangle (500, 600, 100, 50);
+
+    //Class Select
+    int classSelectNum = 1;
+
+    string classCycleNext = ">";
+    string classCyclePrev = "<";
+    string classSelect = "Fighter";
+
+    Vector2 classCycleNextLoc =  new Vector2(600, 500);
+    Vector2 classCyclePrevLoc =  new Vector2(450, 500);
+    Vector2 classSelectLoc =  new Vector2(500, 500);
+
+
+    Rectangle classCycleNextRec = new Rectangle (600, 500, 50, 50);
+    Rectangle classCyclePrevRec = new Rectangle (450, 500, 50, 50);
+
+    //Mouse stuff
+    MouseState mouse;
+    MouseState prevMouse;
+
+    SpriteFont font;
+
+    //troop stuff
+    List<Combatant> playerTroops = new List<Combatant>();
 
     public Game1()
     {
@@ -61,7 +107,8 @@ public class Game1 : Game
         screenWidth = _graphics.GraphicsDevice.Viewport.Width;
         screenHeight = _graphics.GraphicsDevice.Viewport.Height;
 
-        RunCombatSmokeTest();
+        // Temporary smoke test: keep it out of the normal startup path so the game can run.
+        // Call RunCombatSmokeTest() manually when you want to validate combat logic.
 
         base.Initialize();
     }
@@ -98,7 +145,13 @@ public class Game1 : Game
 
         // TODO: use this.Content to load your game content here
 
+        forestBG = Content.Load<Texture2D>("Images/Backgrounds/ForestBG");
+
+        forestBGRec = new Rectangle (0, 0, screenWidth, screenHeight);
+
         
+        font = Content.Load<SpriteFont>("Fonts/SignFont.spritesheet");
+            
     }
 
     protected override void Update(GameTime gameTime)
@@ -118,10 +171,76 @@ public class Game1 : Game
 
             case PLAYERNUMSELECT:
             //Put player on game set up screen
+            prevMouse = mouse;
+            mouse = Mouse.GetState();
+            if (mouse.LeftButton == ButtonState.Pressed && !(prevMouse.LeftButton == ButtonState.Pressed))
+            {
+                if (playerSelectUpRec.Contains(mouse.Position) && playerSelectNum < 5)
+                {
+                    playerSelectNum = Convert.ToInt32(playerSelect) + 1;
+                    playerSelect = Convert.ToString(playerSelectNum);   
+                }
+                else if (playerSelectDownRec.Contains(mouse.Position) && playerSelectNum > 1)
+                {
+                    playerSelectNum = Convert.ToInt32(playerSelect) - 1;
+                    playerSelect = Convert.ToString(playerSelectNum); 
+                }
+                else if (playerSelectConfirmRec.Contains(mouse.Position))
+                {
+
+                    gameState = CLASSSELECT;
+                }
+            }
+
             break;
 
             case CLASSSELECT:
             //Put player on class selection Screen
+
+            prevMouse = mouse;
+            mouse = Mouse.GetState();
+
+            if (classSelectNum == 1)
+            {
+                classSelect = "Fighter";        
+            }
+            else if (classSelectNum == 2)
+            {
+                classSelect = "Ranger";    
+            }
+            else if (classSelectNum == 3)
+            {
+                classSelect = "Rogue";
+            }
+            else if (classSelectNum == 4)
+            {
+                classSelect = "Wizard";
+            }
+            else if (classSelectNum == 5)
+            {
+                classSelect = "Cleric";
+            }
+
+            if (mouse.LeftButton == ButtonState.Pressed && !(prevMouse.LeftButton == ButtonState.Pressed))
+            {
+                if (classCycleNextRec.Contains(mouse.Position) && classSelectNum < 5)
+                {
+                    classSelectNum++;
+                }
+                else if (classCycleNextRec.Contains(mouse.Position) && classSelectNum >= 5)
+                {
+                    classSelectNum = 1;
+                }
+                if (classCyclePrevRec.Contains(mouse.Position) && classSelectNum > 1)
+                {
+                    classSelectNum--;
+                }
+                else if (classCyclePrevRec.Contains(mouse.Position) && classSelectNum <= 1)
+                {
+                    classSelectNum = 5;
+                }
+            }         
+
             break;
 
             case EVENT:
@@ -155,7 +274,28 @@ public class Game1 : Game
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
+        _spriteBatch.Begin();
+        
+        _spriteBatch.Draw(forestBG, forestBGRec, Color.White);
 
+        //Draw in player num select
+        if (gameState == 1)
+        {
+            _spriteBatch.DrawString(font, playerSelect, playerSelectLoc, Color.White);
+            _spriteBatch.DrawString(font, playerSelectDown, playerSelectDownLoc, Color.White);
+            _spriteBatch.DrawString(font, playerSelectUp, playerSelectUpLoc, Color.White);
+            _spriteBatch.DrawString(font, playerSelectConfirm, playerSelectConfirmLoc, Color.White);
+        }
+
+        //Draw in player class Select
+        if (gameState == 2)
+        {
+            _spriteBatch.DrawString(font, classCycleNext, classCycleNextLoc, Color.White);
+            _spriteBatch.DrawString(font, classCyclePrev, classCyclePrevLoc, Color.White);
+            _spriteBatch.DrawString(font, classSelect, classSelectLoc, Color.White);
+        }
+        
+        _spriteBatch.End();
         
         base.Draw(gameTime);
     }
