@@ -25,7 +25,7 @@ public class Game1 : Game
     int targetFPS = 30;
 
     //Random num generator
-    static Random rng = new Random();
+    static readonly Random rng = new Random();
 
     int gameState = 1;
 
@@ -40,7 +40,21 @@ public class Game1 : Game
     
     Texture2D forestBG;
 
+    //PlayerCharacters
+    Texture2D fighterImg;
+    Texture2D rangerImg;
+    Texture2D rogueImg;
+    Texture2D wizardImg;
+    Texture2D clericImg;
+
+    //EnemyCharacters
+    Texture2D hogImg;
+    Texture2D beeImg;
+    Texture2D pixieImg;
+    Texture2D wandererImg;
+
     Rectangle forestBGRec;
+
 
     ////Player Num Select
     int playerSelectNum = 1;
@@ -63,6 +77,7 @@ public class Game1 : Game
     
     // Screens
     ClassSelectScreen classSelectScreen;
+    EnemyGeneration enemyGeneration;
 
     //Input stuff
     MouseState mouse;
@@ -72,6 +87,12 @@ public class Game1 : Game
 
     //troop stuff
     List<Combatant> playerTroops = new List<Combatant>();
+    
+    List<Combatant> enemyTroops = new List<Combatant>();
+
+    Dictionary<Combatant, Rectangle> playerTroopRects = new();
+    Dictionary<Combatant, Rectangle> enemyTroopRects = new();
+
 
     public Game1()
     {
@@ -84,8 +105,8 @@ public class Game1 : Game
     {
        
         //Setup Screen Dimensions
-        _graphics.PreferredBackBufferWidth = 1200;
-        _graphics.PreferredBackBufferHeight = 800;
+        _graphics.PreferredBackBufferWidth = 1920;
+        _graphics.PreferredBackBufferHeight = 1080;
         _graphics.ApplyChanges();
 
         //FPS controller
@@ -137,6 +158,19 @@ public class Game1 : Game
 
         forestBG = Content.Load<Texture2D>("Images/Backgrounds/ForestBG");
 
+        //player Characters
+        fighterImg = Content.Load<Texture2D>("Images/Sprites/FighterImg");
+        rangerImg = Content.Load<Texture2D>("Images/Sprites/RangerImg");
+        rogueImg = Content.Load<Texture2D>("Images/Sprites/RogueImg");
+        wizardImg = Content.Load<Texture2D>("Images/Sprites/WizardImg");
+        clericImg = Content.Load<Texture2D>("Images/Sprites/ClericImg");
+
+        //Enemy Characters
+        hogImg = Content.Load<Texture2D>("Images/Sprites/HogImg");
+        beeImg = Content.Load<Texture2D>("Images/Sprites/BeeImg");
+        pixieImg = Content.Load<Texture2D>("Images/Sprites/PixieImg");
+        wandererImg = Content.Load<Texture2D>("Images/Sprites/WandererImg");
+
         forestBGRec = new Rectangle (0, 0, screenWidth, screenHeight);
 
         font = Content.Load<SpriteFont>("Fonts/SignFont.spritesheet");
@@ -177,7 +211,7 @@ public class Game1 : Game
                 else if (playerSelectConfirmRec.Contains(mouse.Position))
                 {
                     classSelectScreen = new ClassSelectScreen(playerTroops, playerSelectNum);
-                    gameState = CLASSSELECT;
+                    gameState = 2;
                 }
             }
 
@@ -190,6 +224,20 @@ public class Game1 : Game
             //Send players to first fight
             if (classSelectScreen.IsDone)
             {
+                for (int i = 0; i < playerTroops.Count; i++)
+                {
+                    playerTroopRects[playerTroops[i]] = new Rectangle (200, (screenHeight -200) - (100 * i), 100, 100);
+                }
+
+                enemyGeneration = new EnemyGeneration(playerTroops, enemyTroops);
+
+                enemyGeneration.update(rng);
+
+                for (int i = 0; i < enemyTroops.Count; i++)
+                {
+                    enemyTroopRects[enemyTroops[i]] = new Rectangle (900, (screenHeight -200) - (100 * i), 100, 100);
+                }
+
                 gameState = 4;
             }
 
@@ -244,7 +292,70 @@ public class Game1 : Game
         {
             classSelectScreen.draw(_spriteBatch, font);
         }
-        
+        if (gameState == 4)
+        {
+            for (int i = 0; i < playerTroops.Count; i++)
+            {
+                Combatant troop = playerTroops[i];
+                Texture2D texture = null;
+
+
+                if (playerTroops[i] is fighter)
+                {
+                    texture = fighterImg;
+                }
+                else if (playerTroops[i] is ranger)
+                {
+                    texture = rangerImg;
+                }
+                else if (playerTroops[i] is rogue)
+                {
+                    texture = rogueImg;
+                }
+                else if (playerTroops[i] is wizard)
+                {
+                    texture = wizardImg;
+                }
+                else if (playerTroops[i] is cleric)
+                {
+                    texture = clericImg;
+                }
+
+                if (playerTroops[i] != null)
+                {
+                    _spriteBatch.Draw(texture, playerTroopRects[troop], Color.White);
+                }
+            }
+
+            for (int i = 0; i < enemyTroops.Count; i++)
+            {
+                Combatant troop = enemyTroops[i];
+                Texture2D texture = null;
+
+                if (enemyTroops[i] is hog)
+                {
+                    texture = hogImg;
+                }
+                else if (enemyTroops[i] is bee)
+                {
+                    texture = beeImg;
+                }
+                else if (enemyTroops[i] is pixie)
+                {
+                    texture = pixieImg;
+                }
+                else if (enemyTroops[i] is wanderer)
+                {
+                    texture = wandererImg;
+                }
+
+                if (enemyTroops[i] != null)
+                {
+                    _spriteBatch.Draw(texture, enemyTroopRects[troop], Color.White);
+                }
+            }
+        }
+
         _spriteBatch.End();
         
         base.Draw(gameTime);
