@@ -219,3 +219,23 @@ Content/Images/Sprites/WizardImg.xnb:
     Images/Sprites/WizardImg.png: 2026-11-02T23:51:50.0898895Z
   outputs:
     Content/Images/Sprites/WizardImg.xnb: 2026-11-03T13:23:26.6962802Z
+Content/Images/Sprites/BeeImg.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.TextureImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.TextureProcessor
+    colorKeyColor: 255,0,255,255
+    colorKeyEnabled: true
+    generateMipmaps: false
+    premultiplyAlpha: true
+    resizeToPowerOfTwo: false
+    makeSquare: false
+    textureFormat: Color
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Images/Sprites/BeeImg.png: 2026-11-03T17:07:24.0047563Z
+  outputs:
+    Content/Images/Sprites/BeeImg.xnb: 2026-11-03T17:22:47.0273018Z

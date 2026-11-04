@@ -1,6 +1,8 @@
 /*Organizer:
 Immediate goals:
 
+CREATE A CLASS STRUCTURE
+
 GENERATE THE BEE IMG
 
 Also need to figure out how to make it so that any potential stats of the player are taken into the calculations of damage (What did I mean?)

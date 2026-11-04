@@ -60,21 +60,11 @@ public class Game1 : Game
     Rectangle playerSelectConfirmRec = new Rectangle (500, 600, 100, 50);
 
     //Class Select
-    int classSelectNum = 1;
+    
+    // Screens
+    ClassSelectScreen classSelectScreen;
 
-    string classCycleNext = ">";
-    string classCyclePrev = "<";
-    string classSelect = "Fighter";
-
-    Vector2 classCycleNextLoc =  new Vector2(600, 500);
-    Vector2 classCyclePrevLoc =  new Vector2(450, 500);
-    Vector2 classSelectLoc =  new Vector2(500, 500);
-
-
-    Rectangle classCycleNextRec = new Rectangle (600, 500, 50, 50);
-    Rectangle classCyclePrevRec = new Rectangle (450, 500, 50, 50);
-
-    //Mouse stuff
+    //Input stuff
     MouseState mouse;
     MouseState prevMouse;
 
@@ -107,6 +97,8 @@ public class Game1 : Game
         screenWidth = _graphics.GraphicsDevice.Viewport.Width;
         screenHeight = _graphics.GraphicsDevice.Viewport.Height;
 
+        classSelectScreen = new ClassSelectScreen();
+
         // Temporary smoke test: keep it out of the normal startup path so the game can run.
         // Call RunCombatSmokeTest() manually when you want to validate combat logic.
 
@@ -119,7 +111,7 @@ public class Game1 : Game
         var target = new fighter("Smoke test target");
 
         Combatant[] targets = {caster, target};
-
+        
         var turnManager = new TurnManager();
         turnManager.allCombatants.Add(caster);
         turnManager.allCombatants.Add(target);
@@ -149,7 +141,6 @@ public class Game1 : Game
 
         forestBGRec = new Rectangle (0, 0, screenWidth, screenHeight);
 
-        
         font = Content.Load<SpriteFont>("Fonts/SignFont.spritesheet");
             
     }
@@ -187,7 +178,6 @@ public class Game1 : Game
                 }
                 else if (playerSelectConfirmRec.Contains(mouse.Position))
                 {
-
                     gameState = CLASSSELECT;
                 }
             }
@@ -197,49 +187,7 @@ public class Game1 : Game
             case CLASSSELECT:
             //Put player on class selection Screen
 
-            prevMouse = mouse;
-            mouse = Mouse.GetState();
-
-            if (classSelectNum == 1)
-            {
-                classSelect = "Fighter";        
-            }
-            else if (classSelectNum == 2)
-            {
-                classSelect = "Ranger";    
-            }
-            else if (classSelectNum == 3)
-            {
-                classSelect = "Rogue";
-            }
-            else if (classSelectNum == 4)
-            {
-                classSelect = "Wizard";
-            }
-            else if (classSelectNum == 5)
-            {
-                classSelect = "Cleric";
-            }
-
-            if (mouse.LeftButton == ButtonState.Pressed && !(prevMouse.LeftButton == ButtonState.Pressed))
-            {
-                if (classCycleNextRec.Contains(mouse.Position) && classSelectNum < 5)
-                {
-                    classSelectNum++;
-                }
-                else if (classCycleNextRec.Contains(mouse.Position) && classSelectNum >= 5)
-                {
-                    classSelectNum = 1;
-                }
-                if (classCyclePrevRec.Contains(mouse.Position) && classSelectNum > 1)
-                {
-                    classSelectNum--;
-                }
-                else if (classCyclePrevRec.Contains(mouse.Position) && classSelectNum <= 1)
-                {
-                    classSelectNum = 5;
-                }
-            }         
+            classSelectScreen.update(gameTime);
 
             break;
 
@@ -290,9 +238,7 @@ public class Game1 : Game
         //Draw in player class Select
         if (gameState == 2)
         {
-            _spriteBatch.DrawString(font, classCycleNext, classCycleNextLoc, Color.White);
-            _spriteBatch.DrawString(font, classCyclePrev, classCyclePrevLoc, Color.White);
-            _spriteBatch.DrawString(font, classSelect, classSelectLoc, Color.White);
+            classSelectScreen.draw(_spriteBatch, font);
         }
         
         _spriteBatch.End();
