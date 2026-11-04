@@ -4,8 +4,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 
-public class ClassSelectScreen ()
+public class ClassSelectScreen
 {
+    private readonly List<Combatant> playerTroops;
+    private readonly int playerSelectNum;
+
     MouseState mouse;
     MouseState prevMouse;
 
@@ -26,13 +29,21 @@ public class ClassSelectScreen ()
     Vector2 classCycleNextLoc =  new Vector2(600, 500);
     Vector2 classCyclePrevLoc =  new Vector2(450, 500);
     Vector2 classSelectLoc =  new Vector2(500, 500);
-    Vector2 classSelectConfirmLoc =  new Vector2(500, 600);
+    Vector2 classSelectConfirmLoc =  new Vector2(500, 700);
     Vector2 characterNameLoc = new Vector2(500, 600);
 
     Rectangle classCycleNextRec = new Rectangle (600, 500, 50, 50);
     Rectangle classCyclePrevRec = new Rectangle (450, 500, 50, 50);
     Rectangle classSelectConfirmRec = new Rectangle (500, 700, 100, 50);
     Rectangle characterNameRec = new Rectangle (500, 600, 100, 50);
+
+    public bool IsDone {get; private set;}
+
+    public ClassSelectScreen(List<Combatant> playerTroops, int playerSelectNum)
+    {
+        this.playerTroops = playerTroops;
+        this.playerSelectNum = playerSelectNum;
+    }
 
     public void update (GameTime gameTime)
     {
@@ -80,6 +91,38 @@ public class ClassSelectScreen ()
             else if (classCyclePrevRec.Contains(mouse.Position) && classSelectNum <= 1)
             {
                 classSelectNum = 5;
+            }
+            else if (classSelectConfirmRec.Contains(mouse.Position) && characterName != "" && playerSelectNum > playerTroops.Count)
+            {
+                Combatant newTroop;
+                if (classSelect == "Fighter")
+                {
+                    newTroop = new fighter(characterName);
+                }
+                else if (classSelect == "Ranger")
+                {
+                    newTroop = new ranger(characterName);
+                }
+                else if (classSelect == "Rogue")
+                {
+                    newTroop = new rogue(characterName);
+                }
+                else if (classSelect == "Wizard")
+                {
+                    newTroop = new wizard(characterName);
+                }
+                else
+                {
+                    newTroop = new cleric(characterName);
+                }
+                
+                playerTroops.Add(newTroop); 
+                characterName = "";
+
+                if (playerTroops.Count >= playerSelectNum)
+                {
+                    IsDone = true;
+                }
             }
         }   
         //if (characterNameRec.Contains(mouse.Position))

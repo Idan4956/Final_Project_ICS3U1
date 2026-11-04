@@ -97,8 +97,6 @@ public class Game1 : Game
         screenWidth = _graphics.GraphicsDevice.Viewport.Width;
         screenHeight = _graphics.GraphicsDevice.Viewport.Height;
 
-        classSelectScreen = new ClassSelectScreen();
-
         // Temporary smoke test: keep it out of the normal startup path so the game can run.
         // Call RunCombatSmokeTest() manually when you want to validate combat logic.
 
@@ -178,6 +176,7 @@ public class Game1 : Game
                 }
                 else if (playerSelectConfirmRec.Contains(mouse.Position))
                 {
+                    classSelectScreen = new ClassSelectScreen(playerTroops, playerSelectNum);
                     gameState = CLASSSELECT;
                 }
             }
@@ -186,8 +185,13 @@ public class Game1 : Game
 
             case CLASSSELECT:
             //Put player on class selection Screen
-
             classSelectScreen.update(gameTime);
+
+            //Send players to first fight
+            if (classSelectScreen.IsDone)
+            {
+                gameState = 4;
+            }
 
             break;
 
