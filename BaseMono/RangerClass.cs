@@ -11,6 +11,7 @@ public class ranger : Character
         currentHealth = maxHealth;
         maxMana = 4;
         currentMana = 0;
+        classType = "ranger";
 
         //Initial Stats
         strength = 0;

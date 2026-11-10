@@ -11,10 +11,9 @@ public abstract class Combatant
     public double currentHealth { get; set; }
     public int maxMana { get; set; }
     public int currentMana { get; set; }
+    public string classType { get; set;}
 
-    //Stats <summary>
-/// 
-/// </summary>
+    //Stats 
     public int strength { get; set; }
     public int dexterity { get; set; }
     public int constitution { get; set; }
@@ -22,7 +21,6 @@ public abstract class Combatant
     public int faith { get; set;}
     
     //Status Effects
-
     public int trappedStacks { get; set; }
     public int burnStacks { get; set; }
     public int tauntStacks { get; set; }

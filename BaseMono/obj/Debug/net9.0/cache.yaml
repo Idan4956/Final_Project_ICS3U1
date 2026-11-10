@@ -239,3 +239,63 @@ Content/Images/Sprites/BeeImg.xnb:
     Images/Sprites/BeeImg.png: 2026-11-03T17:07:24.0047563Z
   outputs:
     Content/Images/Sprites/BeeImg.xnb: 2026-11-03T17:22:47.0273018Z
+Content/Images/Sprites/ActionFrameImg.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.TextureImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.TextureProcessor
+    colorKeyColor: 255,0,255,255
+    colorKeyEnabled: true
+    generateMipmaps: false
+    premultiplyAlpha: true
+    resizeToPowerOfTwo: false
+    makeSquare: false
+    textureFormat: Color
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Images/Sprites/ActionFrameImg.png: 2026-11-05T01:52:20.5342704Z
+  outputs:
+    Content/Images/Sprites/ActionFrameImg.xnb: 2026-11-05T02:10:17.0787632Z
+Content/Images/Sprites/ButtonHoverImg.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.TextureImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.TextureProcessor
+    colorKeyColor: 255,0,255,255
+    colorKeyEnabled: true
+    generateMipmaps: false
+    premultiplyAlpha: true
+    resizeToPowerOfTwo: false
+    makeSquare: false
+    textureFormat: Color
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Images/Sprites/ButtonHoverImg.png: 2026-11-10T00:22:05.6330187Z
+  outputs:
+    Content/Images/Sprites/ButtonHoverImg.xnb: 2026-11-10T00:39:02.7219478Z
+Content/Images/Sprites/ButtonImg.xnb:
+  contentRoot: Content
+  shouldBuild: true
+  importer: !Microsoft.Xna.Framework.Content.Pipeline.TextureImporter
+    version: 3.8.5.1
+  processor: !Microsoft.Xna.Framework.Content.Pipeline.Processors.TextureProcessor
+    colorKeyColor: 255,0,255,255
+    colorKeyEnabled: true
+    generateMipmaps: false
+    premultiplyAlpha: true
+    resizeToPowerOfTwo: false
+    makeSquare: false
+    textureFormat: Color
+    version: 3.8.5.1
+  compressContent: false
+  graphicsProfile: HiDef
+  dependencies:
+    Images/Sprites/ButtonImg.png: 2026-11-10T00:22:02.8011537Z
+  outputs:
+    Content/Images/Sprites/ButtonImg.xnb: 2026-11-10T00:39:02.7859374Z

@@ -11,6 +11,7 @@ public class fighter : Character
         currentHealth = maxHealth;
         maxMana = 4;
         currentMana = 0;
+        classType = "fighter";
 
         //Initial Stats
         strength = 3;

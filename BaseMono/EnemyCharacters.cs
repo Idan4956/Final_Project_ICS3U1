@@ -13,13 +13,16 @@ public abstract class EnemyCharacter : Combatant
 
     public abstract int attackSelector(Random rng);
 
+    //Randomize player to attack
+    public abstract int randomizeAttack(Random rng, TurnManager turnManager);
+
     //apply attack selected
-    public abstract void strike(List<Character> targets, TurnManager turnManager, Random rng);
+    public abstract void strike(List<Combatant> targets, TurnManager turnManager, Random rng);
 
     //Basic Attacks
-    public abstract void basicStrike(Character target, Random rng, TurnManager turnManager);
+    public abstract void basicStrike(Combatant target, Random rng, TurnManager turnManager);
 
     //Abilities
-    public abstract void useSkillOne(List<Character> targets, Random rng, TurnManager turnManager);
+    public abstract void useSkillOne(List<Combatant> targets, Random rng, TurnManager turnManager);
 
 }

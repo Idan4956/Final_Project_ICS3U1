@@ -60,19 +60,33 @@ public class TurnManager
         }
     }
 
+    public void cleanList()
+    {
+        for (int i = 0; i < allCombatants.Count; i++)
+        {
+            if (allCombatants[i].currentHealth <= 0)
+            {
+                allCombatants.Remove(allCombatants[i]);
+            }
+        }
+    }
+
     public void advanceTurn ()
-    {   if (!isTurnDone || allCombatants.Count == 0)
-        if (isTurnDone == true && currentCharacter < allCombatants.Count)
-        {
-            isTurnDone = false;
+    {   
+        cleanList();
 
-            currentCharacter++;
-        }
-        else if (isTurnDone == true && currentCharacter >= allCombatants.Count)
-        {
-            isTurnDone = false;
+        if (!isTurnDone || allCombatants.Count == 0)
+            return;
 
-            currentCharacter = 0;
-        }
+        isTurnDone = false;
+        
+        currentCharacter = (currentCharacter + 1)% allCombatants.Count;
+    }
+
+    public bool isCurrentCharacterPlayer()
+    {
+        return allCombatants[currentCharacter] is fighter || allCombatants[currentCharacter] is ranger
+        || allCombatants[currentCharacter] is rogue || allCombatants[currentCharacter] is wizard
+        || allCombatants[currentCharacter] is cleric; 
     }
 }

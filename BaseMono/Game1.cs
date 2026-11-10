@@ -10,6 +10,8 @@ using GameUtility;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Mime;
+using System.ComponentModel.Design;
+using System.Linq;
 
 namespace BaseMono;
 
@@ -39,6 +41,19 @@ public class Game1 : Game
     public const int DEFEAT = 7;
     
     Texture2D forestBG;
+
+    //Fight Box
+    Texture2D fightBox;
+
+    Texture2D strikeButton;
+    Texture2D strikeHoverButton;
+
+    Vector2 fightBoxLoc = new Vector2(285, 870);
+
+    Vector2 strikeButtonLoc = new Vector2(320, 920);
+    Vector2 strikeHoverButtonLoc = new Vector2(320, 920);
+    
+    Rectangle strikeButtonRec = new Rectangle(320, 920, 300, 80);
 
     //PlayerCharacters
     Texture2D fighterImg;
@@ -73,11 +88,16 @@ public class Game1 : Game
     Rectangle playerSelectDownRec = new Rectangle (550, 500, 50, 50);
     Rectangle playerSelectConfirmRec = new Rectangle (500, 600, 100, 50);
 
-    //Class Select
+    //Fight 
+
+    string strikeText = "strike";
+
+    Vector2 strikeTextLoc = new Vector2(335, 935);
     
     // Screens
     ClassSelectScreen classSelectScreen;
     EnemyGeneration enemyGeneration;
+    TurnManager turnManager;
 
     //Input stuff
     MouseState mouse;
@@ -103,10 +123,11 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-       
         //Setup Screen Dimensions
         _graphics.PreferredBackBufferWidth = 1920;
         _graphics.PreferredBackBufferHeight = 1080;
+        _graphics.HardwareModeSwitch = false;
+        _graphics.IsFullScreen = true;
         _graphics.ApplyChanges();
 
         //FPS controller
@@ -158,6 +179,11 @@ public class Game1 : Game
 
         forestBG = Content.Load<Texture2D>("Images/Backgrounds/ForestBG");
 
+        fightBox = Content.Load<Texture2D>("Images/Sprites/ActionFrameImg");
+
+        strikeButton = Content.Load<Texture2D>("Images/Sprites/ButtonImg");
+        strikeHoverButton = Content.Load<Texture2D>("Images/Sprites/ButtonHoverImg");
+
         //player Characters
         fighterImg = Content.Load<Texture2D>("Images/Sprites/FighterImg");
         rangerImg = Content.Load<Texture2D>("Images/Sprites/RangerImg");
@@ -186,16 +212,19 @@ public class Game1 : Game
 
         float timePassed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+
+        prevMouse = mouse;
+        mouse = Mouse.GetState();
+    
         switch(gameState)
         {
+
             case INTRO:
             //Put on title Screen
             break;
 
             case PLAYERNUMSELECT:
             //Put player on game set up screen
-            prevMouse = mouse;
-            mouse = Mouse.GetState();
             if (mouse.LeftButton == ButtonState.Pressed && !(prevMouse.LeftButton == ButtonState.Pressed))
             {
                 if (playerSelectUpRec.Contains(mouse.Position) && playerSelectNum < 5)
@@ -226,7 +255,7 @@ public class Game1 : Game
             {
                 for (int i = 0; i < playerTroops.Count; i++)
                 {
-                    playerTroopRects[playerTroops[i]] = new Rectangle (200, (screenHeight -200) - (100 * i), 100, 100);
+                    playerTroopRects[playerTroops[i]] = new Rectangle (200, (screenHeight -450) - (100 * i), 100, 100);
                 }
 
                 enemyGeneration = new EnemyGeneration(playerTroops, enemyTroops);
@@ -235,8 +264,13 @@ public class Game1 : Game
 
                 for (int i = 0; i < enemyTroops.Count; i++)
                 {
-                    enemyTroopRects[enemyTroops[i]] = new Rectangle (900, (screenHeight -200) - (100 * i), 100, 100);
+                    enemyTroopRects[enemyTroops[i]] = new Rectangle (900, (screenHeight -450) - (100 * i), 100, 100);
                 }
+                
+                turnManager = new TurnManager();
+                turnManager.allCombatants.AddRange(playerTroops);
+                turnManager.allCombatants.AddRange(enemyTroops);
+                turnManager.currentCharacter = 0;
 
                 gameState = 4;
             }
@@ -248,8 +282,46 @@ public class Game1 : Game
             break;
 
             case FIGHT:
-            //Put player on fight Screen
-            
+
+            //Checks if there is anythign of type Character in list allCombatants
+            bool arePlayersAlive = turnManager.allCombatants.OfType<Character>().Any();
+            bool areEnemiesAlive = turnManager.allCombatants.OfType<EnemyCharacter>().Any();
+
+            if (!arePlayersAlive)
+            {
+                gameState = DEFEAT;
+                break;
+            }
+            if (!areEnemiesAlive)
+            {
+                gameState = INVENTORY;
+                break;
+            }
+
+            Combatant currentCombatant = turnManager.allCombatants[turnManager.currentCharacter];
+
+            if (turnManager.isCurrentCharacterPlayer())
+            {
+                if (mouse.LeftButton == ButtonState.Pressed && !(prevMouse.LeftButton == ButtonState.Pressed))
+                {
+                    if (strikeButtonRec.Contains(mouse.Position))
+                    {   
+                        //Used to make sure that the active player is of type Character, on top of making sure the active character is a player
+                        if (currentCombatant is Character currentPlayer)
+                        {
+                            //works but need to add selection code
+                            currentPlayer.basicStrike(enemyTroops[0], rng, turnManager);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (currentCombatant is EnemyCharacter currentPlayer)
+                {
+                    currentPlayer.strike(playerTroops, turnManager, rng);
+                }
+            }
             break;
 
             case INVENTORY:
@@ -273,6 +345,8 @@ public class Game1 : Game
 
     protected override void Draw(GameTime gameTime)
     {
+        mouse = Mouse.GetState();
+
         GraphicsDevice.Clear(Color.CornflowerBlue);
         _spriteBatch.Begin();
         
@@ -294,36 +368,54 @@ public class Game1 : Game
         }
         if (gameState == 4)
         {
+            if (turnManager.isCurrentCharacterPlayer())
+            {
+                _spriteBatch.Draw(fightBox, fightBoxLoc, Color.White);
+                // _spriteBatch.DrawString(font, strikeText, strikeTextLoc, Color.White);
+            }
+            if (!strikeButtonRec.Contains(mouse.Position))
+            {
+                _spriteBatch.Draw(strikeButton, strikeButtonLoc, Color.White);
+            }
+            else
+            {
+                _spriteBatch.Draw(strikeHoverButton, strikeHoverButtonLoc, Color.White);
+            }
+
+            _spriteBatch.DrawString(font, strikeText, strikeTextLoc, Color.White);
+
             for (int i = 0; i < playerTroops.Count; i++)
             {
                 Combatant troop = playerTroops[i];
                 Texture2D texture = null;
 
+                if (troop.currentHealth > 0)
+                {
+                    if (playerTroops[i] is fighter)
+                    {
+                        texture = fighterImg;
+                    }
+                    else if (playerTroops[i] is ranger)
+                    {
+                        texture = rangerImg;
+                    }
+                    else if (playerTroops[i] is rogue)
+                    {
+                        texture = rogueImg;
+                    }
+                    else if (playerTroops[i] is wizard)
+                    {
+                        texture = wizardImg;
+                    }
+                    else if (playerTroops[i] is cleric)
+                    {
+                        texture = clericImg;
+                    }
 
-                if (playerTroops[i] is fighter)
-                {
-                    texture = fighterImg;
-                }
-                else if (playerTroops[i] is ranger)
-                {
-                    texture = rangerImg;
-                }
-                else if (playerTroops[i] is rogue)
-                {
-                    texture = rogueImg;
-                }
-                else if (playerTroops[i] is wizard)
-                {
-                    texture = wizardImg;
-                }
-                else if (playerTroops[i] is cleric)
-                {
-                    texture = clericImg;
-                }
-
-                if (playerTroops[i] != null)
-                {
-                    _spriteBatch.Draw(texture, playerTroopRects[troop], Color.White);
+                    if (playerTroops[i] != null)
+                    {
+                        _spriteBatch.Draw(texture, playerTroopRects[troop], Color.White);
+                    }
                 }
             }
 
@@ -332,26 +424,29 @@ public class Game1 : Game
                 Combatant troop = enemyTroops[i];
                 Texture2D texture = null;
 
-                if (enemyTroops[i] is hog)
+                if (troop.currentHealth > 0)
                 {
-                    texture = hogImg;
-                }
-                else if (enemyTroops[i] is bee)
-                {
-                    texture = beeImg;
-                }
-                else if (enemyTroops[i] is pixie)
-                {
-                    texture = pixieImg;
-                }
-                else if (enemyTroops[i] is wanderer)
-                {
-                    texture = wandererImg;
-                }
+                    if (enemyTroops[i] is hog)
+                    {
+                        texture = hogImg;
+                    }
+                    else if (enemyTroops[i] is bee)
+                    {
+                        texture = beeImg;
+                    }
+                    else if (enemyTroops[i] is pixie)
+                    {
+                        texture = pixieImg;
+                    }
+                    else if (enemyTroops[i] is wanderer)
+                    {
+                        texture = wandererImg;
+                    }
 
-                if (enemyTroops[i] != null)
-                {
-                    _spriteBatch.Draw(texture, enemyTroopRects[troop], Color.White);
+                    if (enemyTroops[i] != null)
+                    {
+                        _spriteBatch.Draw(texture, enemyTroopRects[troop], Color.White);
+                    }
                 }
             }
         }

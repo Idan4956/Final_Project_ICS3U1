@@ -12,6 +12,7 @@ public class bee : EnemyCharacter
         currentHealth = maxHealth;
         maxMana = 4;
         currentMana = 0;
+        classType = "bee";
 
         //Initial Stats
         strength = rng.Next(0, 5);
@@ -54,18 +55,36 @@ public class bee : EnemyCharacter
         return attackSelect;
     }
 
-    public override void strike(List<Character> targets, TurnManager turnManager, Random rng)
+    public override int randomizeAttack(Random rng, TurnManager turnManager)
+    {
+        List<int> playerTroops = new List<int>();
+        int randomPlayer = 1;
+        
+        for (int i = 0; i < turnManager.allCombatants.Count; i++)
+        {
+            if (turnManager.allCombatants[i] is Character)
+            {
+                playerTroops.Add(i);
+            }
+        }
+        
+        randomPlayer = playerTroops[rng.Next(0, playerTroops.Count)];
+
+        return randomPlayer;
+    }
+
+    public override void strike(List<Combatant> targets, TurnManager turnManager, Random rng)
     {
         int attackPattern = this.attackSelector(rng);  
 
         if (attackPattern == 1)
-            this.basicStrike(targets[0], rng, turnManager); 
+            this.basicStrike(targets[this.randomizeAttack(rng, turnManager)], rng, turnManager); 
         else if (attackPattern == 2)
             this.useSkillOne(targets, rng, turnManager);
 
     }
 
-    public override void basicStrike(Character target, Random rng, TurnManager turnManager)
+    public override void basicStrike(Combatant target, Random rng, TurnManager turnManager)
     {
         double staticDamage = 2 * (1 + (this.strength * 0.05));
 
@@ -84,7 +103,7 @@ public class bee : EnemyCharacter
         turnManager.advanceTurn();
     }
 
-    public override void useSkillOne(List<Character> targets, Random rng, TurnManager turnManager)
+    public override void useSkillOne(List<Combatant> targets, Random rng, TurnManager turnManager)
     {
         if (targets == null || targets.Count == 0)
         {

@@ -1,9 +1,9 @@
 /*Organizer:
 Immediate goals:
 
-CREATE A CLASS STRUCTURE
+MAKE ENEMIES RANDOMLY CHOOSE WHO TO ATTACK
 
-GENERATE THE BEE IMG
+ADD ABILTY TO SELECT ENEMY TO ATTACK
 
 Also need to figure out how to make it so that any potential stats of the player are taken into the calculations of damage (What did I mean?)
 
