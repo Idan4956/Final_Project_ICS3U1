@@ -53,6 +53,10 @@
             "MonoGame.Framework.DesktopGL": {
               "target": "Package",
               "version": "[3.8.*, )"
+            },
+            "RandomNameGeneratorLibrary": {
+              "target": "Package",
+              "version": "[2.3.0, )"
             }
           },
           "imports": [

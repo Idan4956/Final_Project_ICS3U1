@@ -5,16 +5,20 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using System.Transactions;
 using BaseMono;
+using RandomNameGeneratorLibrary;
 
 public class EnemyGeneration
 {
     private readonly List<Combatant> playerTroops;
     private readonly List<Combatant> enemyTroops;
+    private RandomNameGeneratorLibrary.StarNameGenerator enemyNameGenerator;
 
     public EnemyGeneration(List<Combatant> playerTroops, List<Combatant> enemyTroops)
     {
         this.playerTroops = playerTroops;
         this.enemyTroops = enemyTroops;
+
+        this.enemyNameGenerator = new StarNameGenerator();
     }
 
     public void update(Random rng)
@@ -28,23 +32,23 @@ public class EnemyGeneration
         {
             double randomizeEnemy = rng.NextDouble();
 
-            string enemyNum = "enemyNum" + Convert.ToString(i);
+            string enemyName = enemyNameGenerator.GenerateRandomStarName();
 
             if (randomizeEnemy >= 0.0 && randomizeEnemy <= 0.3)
             {
-                newEnemy = new hog(enemyNum, rng);
+                newEnemy = new hog(enemyName, rng);
             }
             else if (randomizeEnemy > 0.3 && randomizeEnemy <= 0.6)
             {
-                newEnemy = new bee(enemyNum, rng);
+                newEnemy = new bee(enemyName, rng);
             }
             else if (randomizeEnemy > 0.6 && randomizeEnemy <= 0.85)
             {
-                newEnemy = new pixie(enemyNum, rng);
+                newEnemy = new pixie(enemyName, rng);
             }
             else 
             {
-                newEnemy = new wanderer(enemyNum, rng);
+                newEnemy = new wanderer(enemyName, rng);
             } 
 
             enemyTroops.Add(newEnemy);

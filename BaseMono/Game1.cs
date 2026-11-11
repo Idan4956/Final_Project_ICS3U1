@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using GameUtility;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Mime;
 using System.ComponentModel.Design;
@@ -39,10 +38,13 @@ public class Game1 : Game
     public const int INVENTORY = 5;
     public const int VICTORY = 6;
     public const int DEFEAT = 7;
+
+    public const double TROOPSCALESIZE = 0.2;
     
     Texture2D forestBG;
 
     //Fight Box
+
     Texture2D fightBox;
 
     Texture2D strikeButton;
@@ -54,6 +56,8 @@ public class Game1 : Game
     Vector2 strikeHoverButtonLoc = new Vector2(320, 920);
     
     Rectangle strikeButtonRec = new Rectangle(320, 920, 300, 80);
+
+    bool isStrikeButtonPressed;
 
     //PlayerCharacters
     Texture2D fighterImg;
@@ -112,6 +116,9 @@ public class Game1 : Game
 
     Dictionary<Combatant, Rectangle> playerTroopRects = new();
     Dictionary<Combatant, Rectangle> enemyTroopRects = new();
+
+    Dictionary<int, Vector2> enemyTroopsNameLoc = new Dictionary<int, Vector2>();
+    Dictionary<int, Rectangle> enemyTroopsNameRec = new Dictionary<int, Rectangle>();
 
 
     public Game1()
@@ -255,7 +262,7 @@ public class Game1 : Game
             {
                 for (int i = 0; i < playerTroops.Count; i++)
                 {
-                    playerTroopRects[playerTroops[i]] = new Rectangle (200, (screenHeight -450) - (100 * i), 100, 100);
+                    playerTroopRects[playerTroops[i]] = new Rectangle (200, screenHeight -450 - (100 * i), Convert.ToInt32(fighterImg.Width * TROOPSCALESIZE), Convert.ToInt32(fighterImg.Height * TROOPSCALESIZE));
                 }
 
                 enemyGeneration = new EnemyGeneration(playerTroops, enemyTroops);
@@ -264,7 +271,7 @@ public class Game1 : Game
 
                 for (int i = 0; i < enemyTroops.Count; i++)
                 {
-                    enemyTroopRects[enemyTroops[i]] = new Rectangle (900, (screenHeight -450) - (100 * i), 100, 100);
+                    enemyTroopRects[enemyTroops[i]] = new Rectangle (900, screenHeight -450 - (100 * i), Convert.ToInt32(fighterImg.Width * TROOPSCALESIZE), Convert.ToInt32(fighterImg.Height * TROOPSCALESIZE));
                 }
                 
                 turnManager = new TurnManager();
@@ -306,12 +313,7 @@ public class Game1 : Game
                 {
                     if (strikeButtonRec.Contains(mouse.Position))
                     {   
-                        //Used to make sure that the active player is of type Character, on top of making sure the active character is a player
-                        if (currentCombatant is Character currentPlayer)
-                        {
-                            //works but need to add selection code
-                            currentPlayer.basicStrike(enemyTroops[0], rng, turnManager);
-                        }
+                        isStrikeButtonPressed = true;    
                     }
                 }
             }
@@ -322,6 +324,26 @@ public class Game1 : Game
                     currentPlayer.strike(playerTroops, turnManager, rng);
                 }
             }
+
+            if (isStrikeButtonPressed)
+            {
+                //Used to make sure that the active player is of type Character, on top of making sure the active character is a player
+                if (currentCombatant is Character currentPlayer)
+                {
+                    enemyTroopsNameLoc.Clear();
+                    enemyTroopsNameRec.Clear();
+
+                    for (int i = 0; i < enemyTroops.Count; i++)
+                    {
+                        enemyTroopsNameLoc[i] = new Vector2 (300 + 25 * i, 800 + 25 * i);   
+                        enemyTroopsNameRec[i] = new Rectangle (300 + 25 * i, 800 + 25 * i, 300, 80);     
+                    }
+
+                    //works but need to add selection code
+                    //currentPlayer.basicStrike(enemyTroops[0], rng, turnManager);
+                }
+            }
+
             break;
 
             case INVENTORY:
@@ -372,22 +394,32 @@ public class Game1 : Game
             {
                 _spriteBatch.Draw(fightBox, fightBoxLoc, Color.White);
                 // _spriteBatch.DrawString(font, strikeText, strikeTextLoc, Color.White);
-            }
-            if (!strikeButtonRec.Contains(mouse.Position))
-            {
-                _spriteBatch.Draw(strikeButton, strikeButtonLoc, Color.White);
-            }
-            else
-            {
-                _spriteBatch.Draw(strikeHoverButton, strikeHoverButtonLoc, Color.White);
-            }
+            
+                if (!strikeButtonRec.Contains(mouse.Position) && !isStrikeButtonPressed)
+                {
+                    _spriteBatch.Draw(strikeButton, strikeButtonLoc, Color.White);
+                }
+                else if (isStrikeButtonPressed)
+                {
+                    for (int i = 0; i < enemyTroops.Count; i++)
+                    {
+                        _spriteBatch.Draw(strikeButton, enemyTroopsNameLoc[i], Color.White);
+                    }
+                }
+                else
+                {
+                    _spriteBatch.Draw(strikeHoverButton, strikeHoverButtonLoc, Color.White);
+                }
 
-            _spriteBatch.DrawString(font, strikeText, strikeTextLoc, Color.White);
+                _spriteBatch.DrawString(font, strikeText, strikeTextLoc, Color.White);
+            }
 
             for (int i = 0; i < playerTroops.Count; i++)
             {
                 Combatant troop = playerTroops[i];
+                string troopName = playerTroops[i].name;
                 Texture2D texture = null;
+                Vector2 troopCords = new Vector2 (playerTroopRects[troop].X, playerTroopRects[troop].Y - font.LineSpacing - 5);
 
                 if (troop.currentHealth > 0)
                 {
@@ -415,6 +447,7 @@ public class Game1 : Game
                     if (playerTroops[i] != null)
                     {
                         _spriteBatch.Draw(texture, playerTroopRects[troop], Color.White);
+                        _spriteBatch.DrawString(font, troopName, troopCords, Color.White);
                     }
                 }
             }
@@ -422,7 +455,9 @@ public class Game1 : Game
             for (int i = 0; i < enemyTroops.Count; i++)
             {
                 Combatant troop = enemyTroops[i];
+                string enemyName = "";
                 Texture2D texture = null;
+                Vector2 enemyCords = new Vector2 (enemyTroopRects[troop].X, enemyTroopRects[troop].Y - font.LineSpacing - 5);
 
                 if (troop.currentHealth > 0)
                 {
@@ -443,9 +478,12 @@ public class Game1 : Game
                         texture = wandererImg;
                     }
 
+                    enemyName = enemyTroops[i].name;
+
                     if (enemyTroops[i] != null)
                     {
                         _spriteBatch.Draw(texture, enemyTroopRects[troop], Color.White);
+                        _spriteBatch.DrawString(font, enemyName, enemyCords, Color.White);
                     }
                 }
             }
