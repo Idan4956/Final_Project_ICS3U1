@@ -33,7 +33,10 @@ public class EnemyGeneration
             double randomizeEnemy = rng.NextDouble();
 
             string enemyName = enemyNameGenerator.GenerateRandomStarName();
-
+            if (enemyName.Length > 8)
+            {
+                enemyName = enemyName.Substring(0, 8);
+            }
             if (randomizeEnemy >= 0.0 && randomizeEnemy <= 0.3)
             {
                 newEnemy = new hog(enemyName, rng);

@@ -11,6 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Net.Mime;
 using System.ComponentModel.Design;
 using System.Linq;
+using System.Net.Sockets;
 
 namespace BaseMono;
 
@@ -43,6 +44,8 @@ public class Game1 : Game
     
     Texture2D forestBG;
 
+    string defeatText = "Defeat";
+
     //Fight Box
 
     Texture2D fightBox;
@@ -58,6 +61,8 @@ public class Game1 : Game
     Rectangle strikeButtonRec = new Rectangle(320, 920, 300, 80);
 
     bool isStrikeButtonPressed;
+
+    Timer openEnemySelection = new Timer (500, false);
 
     //PlayerCharacters
     Texture2D fighterImg;
@@ -117,8 +122,10 @@ public class Game1 : Game
     Dictionary<Combatant, Rectangle> playerTroopRects = new();
     Dictionary<Combatant, Rectangle> enemyTroopRects = new();
 
-    Dictionary<int, Vector2> enemyTroopsNameLoc = new Dictionary<int, Vector2>();
-    Dictionary<int, Rectangle> enemyTroopsNameRec = new Dictionary<int, Rectangle>();
+    Dictionary<int, Vector2> enemyNameBoxLoc = new Dictionary<int, Vector2>();
+    Dictionary<int, Rectangle> enemyNameBoxRec = new Dictionary<int, Rectangle>();
+
+    Dictionary<int, Vector2> enemyNameLoc = new Dictionary<int, Vector2>();
 
 
     public Game1()
@@ -134,7 +141,7 @@ public class Game1 : Game
         _graphics.PreferredBackBufferWidth = 1920;
         _graphics.PreferredBackBufferHeight = 1080;
         _graphics.HardwareModeSwitch = false;
-        _graphics.IsFullScreen = true;
+        //_graphics.IsFullScreen = true;
         _graphics.ApplyChanges();
 
         //FPS controller
@@ -314,6 +321,7 @@ public class Game1 : Game
                     if (strikeButtonRec.Contains(mouse.Position))
                     {   
                         isStrikeButtonPressed = true;    
+                        openEnemySelection.ResetTimer(false);
                     }
                 }
             }
@@ -330,17 +338,32 @@ public class Game1 : Game
                 //Used to make sure that the active player is of type Character, on top of making sure the active character is a player
                 if (currentCombatant is Character currentPlayer)
                 {
-                    enemyTroopsNameLoc.Clear();
-                    enemyTroopsNameRec.Clear();
+                    enemyNameBoxLoc.Clear();
+                    enemyNameBoxRec.Clear();
 
                     for (int i = 0; i < enemyTroops.Count; i++)
                     {
-                        enemyTroopsNameLoc[i] = new Vector2 (300 + 25 * i, 800 + 25 * i);   
-                        enemyTroopsNameRec[i] = new Rectangle (300 + 25 * i, 800 + 25 * i, 300, 80);     
+                        enemyNameBoxLoc[i] = new Vector2 (330 + 330 * i, 900);   
+                        enemyNameBoxRec[i] = new Rectangle (330 + 330 * i, 900, 300, 80);  
+
+                        enemyNameLoc[i] = new Vector2 (enemyNameBoxLoc[i].X + 100, enemyNameBoxLoc[i].Y + 20);   
                     }
 
-                    //works but need to add selection code
-                    //currentPlayer.basicStrike(enemyTroops[0], rng, turnManager);
+                    if (openEnemySelection.IsFinished() == false)
+                    {
+                        openEnemySelection.Update(gameTime);
+                    }
+                    else 
+                    {
+                        for (int i = 0; i < enemyTroops.Count; i++)
+                        {
+                            if (enemyNameBoxRec[i].Contains(mouse.Position) && mouse.LeftButton == ButtonState.Pressed && prevMouse.LeftButton != ButtonState.Pressed)
+                            {
+                                currentPlayer.basicStrike(enemyTroops[i], rng, turnManager);
+                            }
+                        }
+                        isStrikeButtonPressed = false;
+                    }
                 }
             }
 
@@ -398,20 +421,20 @@ public class Game1 : Game
                 if (!strikeButtonRec.Contains(mouse.Position) && !isStrikeButtonPressed)
                 {
                     _spriteBatch.Draw(strikeButton, strikeButtonLoc, Color.White);
+                    _spriteBatch.DrawString(font, strikeText, strikeTextLoc, Color.White);
                 }
                 else if (isStrikeButtonPressed)
                 {
                     for (int i = 0; i < enemyTroops.Count; i++)
                     {
-                        _spriteBatch.Draw(strikeButton, enemyTroopsNameLoc[i], Color.White);
+                        _spriteBatch.Draw(strikeButton, enemyNameBoxLoc[i], Color.White);
                     }
                 }
                 else
                 {
                     _spriteBatch.Draw(strikeHoverButton, strikeHoverButtonLoc, Color.White);
+                    _spriteBatch.DrawString(font, strikeText, strikeTextLoc, Color.White);
                 }
-
-                _spriteBatch.DrawString(font, strikeText, strikeTextLoc, Color.White);
             }
 
             for (int i = 0; i < playerTroops.Count; i++)
@@ -484,9 +507,18 @@ public class Game1 : Game
                     {
                         _spriteBatch.Draw(texture, enemyTroopRects[troop], Color.White);
                         _spriteBatch.DrawString(font, enemyName, enemyCords, Color.White);
+                        if (isStrikeButtonPressed)
+                        {
+                            _spriteBatch.DrawString(font, enemyName, enemyNameLoc[i], Color.White);
+                        }
                     }
                 }
             }
+        }
+
+        if (gameState == 7)
+        {
+            _spriteBatch.DrawString(font, defeatText, fightBoxLoc, Color.White);
         }
 
         _spriteBatch.End();
