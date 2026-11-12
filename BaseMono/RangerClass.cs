@@ -38,7 +38,7 @@ public class ranger : Character
                 currentMana--;
 
                 double staticDamage = 5 * (1 + (dexterity * 0.05));
-                double rolledDamage = (staticDamage *(1 + (rng.Next(7,14) / 10.0)));
+                double rolledDamage = staticDamage *(1 + (rng.Next(7,14) / 10.0));
                 
                 
 

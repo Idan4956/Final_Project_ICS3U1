@@ -37,7 +37,7 @@ public class fighter : Character
                 currentMana --;
 
                 double staticDamage = 5 * (1 + (strength * 0.05));
-                double rolledDamage = (staticDamage *(1 + (rng.Next(7,14) / 10.0)));
+                double rolledDamage = staticDamage *(1 + (rng.Next(7,14) / 10.0));
 
                 if (target.currentHealth > rolledDamage)
                 {

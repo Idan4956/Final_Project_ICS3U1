@@ -54,16 +54,26 @@ public class Game1 : Game
     Texture2D strikeButton;
     Texture2D strikeHoverButton;
 
+    Texture2D ability1Button;
+    Texture2D ability1HoverButton;
+
     Vector2 fightBoxLoc = new Vector2(285, 870);
 
     Vector2 strikeButtonLoc = new Vector2(320, 920);
     Vector2 strikeHoverButtonLoc = new Vector2(320, 920);
+
+    Vector2 ability1ButtonLoc = new Vector2(650, 920);
+    Vector2 ability1HoverButtonLoc = new Vector2(650, 920);
     
     Rectangle strikeButtonRec = new Rectangle(320, 920, 300, 80);
 
-    bool isStrikeButtonPressed;
+    Rectangle ability1ButtonRec = new Rectangle(650, 920, 300, 80);
 
-    Timer openEnemySelection = new Timer (50, false);
+    bool isStrikeButtonPressed;
+    
+    bool isAbility1ButtonPressed;
+
+    Timer openEnemySelectionTimer = new Timer (50, false);
 
     //PlayerCharacters
     Texture2D fighterImg;
@@ -102,12 +112,17 @@ public class Game1 : Game
 
     string strikeText = "strike";
 
+    string ability1Text = "Ability 1";
+
     Vector2 strikeTextLoc = new Vector2(335, 935);
+
+    Vector2 ability1TextLoc = new Vector2(665, 935);
     
     // Screens
     ClassSelectScreen classSelectScreen;
     EnemyGeneration enemyGeneration;
     TurnManager turnManager;
+    Effects Effects;
 
     //Input stuff
     MouseState mouse;
@@ -158,32 +173,6 @@ public class Game1 : Game
         // Call RunCombatSmokeTest() manually when you want to validate combat logic.
 
         base.Initialize();
-    }
-
-    private static void RunCombatSmokeTest()
-    {
-        var caster = new wizard("Smoke test caster") { currentMana = 4 };
-        var target = new fighter("Smoke test target");
-
-        Combatant[] targets = {caster, target};
-        
-        var turnManager = new TurnManager();
-        turnManager.allCombatants.Add(caster);
-        turnManager.allCombatants.Add(target);
-
-        Combatant[] selectedTargets = {target};
-
-        double startingHealth = target.currentHealth;
-
-        caster.useSkillTwo(selectedTargets, rng, turnManager);
-
-        if (caster.currentMana != 2 || target.currentHealth >= startingHealth ||
-            target.poisonStacks != 2 || turnManager.currentCharacter != 1)
-        {
-            throw new InvalidOperationException("Combat smoke test failed.");
-        }
-
-        System.Diagnostics.Debug.WriteLine("Combat smoke test passed: skill cost, damage, poison, and turn advance.");
     }
 
     protected override void LoadContent()
@@ -287,6 +276,8 @@ public class Game1 : Game
                 turnManager.allCombatants.AddRange(enemyTroops);
                 turnManager.currentCharacter = 0;
 
+                Effects = new Effects(turnManager);
+
                 gameState = 4;
             }
 
@@ -302,7 +293,7 @@ public class Game1 : Game
             bool arePlayersAlive = turnManager.allCombatants.OfType<Character>().Any();
             bool areEnemiesAlive = turnManager.allCombatants.OfType<EnemyCharacter>().Any();
 
-            openEnemySelection.Update(gameTime);
+            openEnemySelectionTimer.Update(gameTime);
 
             if (!arePlayersAlive)
             {
@@ -318,13 +309,21 @@ public class Game1 : Game
             Combatant currentCombatant = turnManager.allCombatants[turnManager.currentCharacter];
 
             if (turnManager.isCurrentCharacterPlayer())
-            {
+            {   
+                turnManager.startTurn(Effects);
+
                 if (mouse.LeftButton == ButtonState.Pressed && !(prevMouse.LeftButton == ButtonState.Pressed))
                 {
-                    if (strikeButtonRec.Contains(mouse.Position) && isStrikeButtonPressed == false)
+                    if (strikeButtonRec.Contains(mouse.Position) && !isStrikeButtonPressed && !isAbility1ButtonPressed)
                     {   
                         isStrikeButtonPressed = true;    
-                        openEnemySelection.ResetTimer(true);
+                        openEnemySelectionTimer.ResetTimer(true);
+                    }
+
+                    if (ability1ButtonRec.Contains(mouse.Position) && !isStrikeButtonPressed && !isAbility1ButtonPressed)
+                    {
+                        isAbility1ButtonPressed = true;
+                        openEnemySelectionTimer.ResetTimer(true);
                     }
                 }
             }
@@ -336,10 +335,10 @@ public class Game1 : Game
                 }
             }
 
-            Debug.WriteLine("is timer finished: " + openEnemySelection.IsFinished());
-            Trace.WriteLine("timer counter: " + openEnemySelection.GetTimeRemaining());
+            Debug.WriteLine("is timer finished: " + openEnemySelectionTimer.IsFinished());
+            Trace.WriteLine("timer counter: " + openEnemySelectionTimer.GetTimeRemaining());
 
-            if (isStrikeButtonPressed && openEnemySelection.IsFinished())
+            if ((isStrikeButtonPressed || isAbility1ButtonPressed) && openEnemySelectionTimer.IsFinished())
             {
                 //Used to make sure that the active player is of type Character, on top of making sure the active character is a player
                 if (currentCombatant is Character currentPlayer)
@@ -354,13 +353,34 @@ public class Game1 : Game
 
                         enemyNameLoc[i] = new Vector2 (enemyNameBoxLoc[i].X + 100, enemyNameBoxLoc[i].Y + 20);   
                     }
-                    
-                    for (int i = 0; i < enemyTroops.Count; i++)
+                    if (isStrikeButtonPressed)
                     {
-                        if (enemyNameBoxRec[i].Contains(mouse.Position) && mouse.LeftButton == ButtonState.Pressed && prevMouse.LeftButton != ButtonState.Pressed)
+                        for (int i = 0; i < enemyTroops.Count; i++)
                         {
-                            currentPlayer.basicStrike(enemyTroops[i], rng, turnManager);
-                            isStrikeButtonPressed = false;
+                            if (enemyNameBoxRec[i].Contains(mouse.Position) && mouse.LeftButton == ButtonState.Pressed && prevMouse.LeftButton != ButtonState.Pressed && enemyTroops[i].currentHealth > 0)
+                            {
+                                currentPlayer.basicStrike(enemyTroops[i], rng, turnManager);
+                                isStrikeButtonPressed = false;
+                            }
+                        }
+                    }
+                    else if (isAbility1ButtonPressed)
+                    {
+                        for (int i = 0; i < enemyTroops.Count; i++)
+                        {
+                            if (enemyNameBoxRec[i].Contains(mouse.Position) && mouse.LeftButton == ButtonState.Pressed && prevMouse.LeftButton != ButtonState.Pressed && enemyTroops[i].currentHealth > 0)
+                            {
+                                if (currentPlayer is cleric)
+                                {
+                                    currentPlayer.useSkillOne(playerTroops[i], rng, turnManager);
+                                    isAbility1ButtonPressed = false;
+                                }
+                                else 
+                                {
+                                    currentPlayer.useSkillOne(enemyTroops[i], rng, turnManager);
+                                    isAbility1ButtonPressed = false;
+                                }
+                            }
                         }
                     }
                 }
@@ -415,21 +435,42 @@ public class Game1 : Game
                 _spriteBatch.Draw(fightBox, fightBoxLoc, Color.White);
                 // _spriteBatch.DrawString(font, strikeText, strikeTextLoc, Color.White);
             
-                if (!strikeButtonRec.Contains(mouse.Position) && !isStrikeButtonPressed)
+                if (!strikeButtonRec.Contains(mouse.Position) && !isStrikeButtonPressed && !isAbility1ButtonPressed)
                 {
                     _spriteBatch.Draw(strikeButton, strikeButtonLoc, Color.White);
                     _spriteBatch.DrawString(font, strikeText, strikeTextLoc, Color.White);
+
+                    _spriteBatch.Draw(strikeButton, ability1ButtonLoc, Color.White);
+                    _spriteBatch.DrawString(font, ability1Text, ability1TextLoc, Color.White);
                 }
-                else if (isStrikeButtonPressed && openEnemySelection.IsFinished())
+                else if ((isStrikeButtonPressed || isAbility1ButtonPressed) && openEnemySelectionTimer.IsFinished())
                 {
                     for (int i = 0; i < enemyTroops.Count; i++)
                     {
-                        _spriteBatch.Draw(strikeButton, enemyNameBoxLoc[i], Color.White);
+                        if (enemyNameBoxRec[i].Contains(mouse.Position))
+                        {
+                            _spriteBatch.Draw(strikeHoverButton, enemyNameBoxLoc[i], Color.White);
+                        }
+                        else 
+                        {
+                            _spriteBatch.Draw(strikeButton, enemyNameBoxLoc[i], Color.White);
+                        }
                     }
                 }
-                else
+                else if (!isStrikeButtonPressed && strikeButtonRec.Contains(mouse.Position))
                 {
                     _spriteBatch.Draw(strikeHoverButton, strikeHoverButtonLoc, Color.White);
+                    _spriteBatch.DrawString(font, strikeText, strikeTextLoc, Color.White);
+
+                    _spriteBatch.Draw(strikeButton, ability1ButtonLoc, Color.White);
+                    _spriteBatch.DrawString(font, ability1Text, ability1TextLoc, Color.White);
+                }
+                if (!isAbility1ButtonPressed && !isStrikeButtonPressed && ability1ButtonRec.Contains(mouse.Position))
+                {
+                    _spriteBatch.Draw(strikeHoverButton, ability1HoverButtonLoc, Color.White);
+                    _spriteBatch.DrawString(font, ability1Text, ability1TextLoc, Color.White);
+
+                    _spriteBatch.Draw(strikeButton, strikeButtonLoc, Color.White);
                     _spriteBatch.DrawString(font, strikeText, strikeTextLoc, Color.White);
                 }
             }
@@ -438,8 +479,11 @@ public class Game1 : Game
             {
                 Combatant troop = playerTroops[i];
                 string troopName = playerTroops[i].name;
+                string troopHealth = Convert.ToString(Math.Round(playerTroops[i].currentHealth));
                 Texture2D texture = null;
                 Vector2 troopCords = new Vector2 (playerTroopRects[troop].X, playerTroopRects[troop].Y - font.LineSpacing - 5);
+                Vector2 troopHealthCords = new Vector2 (playerTroopRects[troop].X + 50, playerTroopRects[troop].Y - font.LineSpacing - 5);
+
 
                 if (troop.currentHealth > 0)
                 {
@@ -468,6 +512,7 @@ public class Game1 : Game
                     {
                         _spriteBatch.Draw(texture, playerTroopRects[troop], Color.White);
                         _spriteBatch.DrawString(font, troopName, troopCords, Color.White);
+                        _spriteBatch.DrawString(font, troopHealth, troopHealthCords, Color.Red);
                     }
                 }
             }
@@ -476,8 +521,11 @@ public class Game1 : Game
             {
                 Combatant troop = enemyTroops[i];
                 string enemyName = "";
+                string enemyHealth = Convert.ToString(Math.Round(enemyTroops[i].currentHealth));
                 Texture2D texture = null;
                 Vector2 enemyCords = new Vector2 (enemyTroopRects[troop].X, enemyTroopRects[troop].Y - font.LineSpacing - 5);
+                Vector2 enemyHealthCords = new Vector2 (enemyTroopRects[troop].X + 80, enemyTroopRects[troop].Y - font.LineSpacing - 5);
+
 
                 if (troop.currentHealth > 0)
                 {
@@ -504,7 +552,8 @@ public class Game1 : Game
                     {
                         _spriteBatch.Draw(texture, enemyTroopRects[troop], Color.White);
                         _spriteBatch.DrawString(font, enemyName, enemyCords, Color.White);
-                        if (isStrikeButtonPressed && openEnemySelection.IsFinished())
+                        _spriteBatch.DrawString(font, enemyHealth, enemyHealthCords, Color.Red);
+                        if ((isStrikeButtonPressed || isAbility1ButtonPressed) && openEnemySelectionTimer.IsFinished())
                         {
                             _spriteBatch.DrawString(font, enemyName, enemyNameLoc[i], Color.White);
                         }

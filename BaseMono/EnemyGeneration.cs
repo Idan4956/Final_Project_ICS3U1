@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using System.Transactions;
+using System.Text.RegularExpressions;
 using BaseMono;
 using RandomNameGeneratorLibrary;
 
@@ -12,6 +13,7 @@ public class EnemyGeneration
     private readonly List<Combatant> playerTroops;
     private readonly List<Combatant> enemyTroops;
     private RandomNameGeneratorLibrary.StarNameGenerator enemyNameGenerator;
+    char[] filteredChars = { ',', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '{', '}', '[', ']', ':', ';', '"', '\'', '?', '/', '.', '<', '>', '\\', '|' };
 
     public EnemyGeneration(List<Combatant> playerTroops, List<Combatant> enemyTroops)
     {
@@ -32,7 +34,10 @@ public class EnemyGeneration
         {
             double randomizeEnemy = rng.NextDouble();
 
-            string enemyName = enemyNameGenerator.GenerateRandomStarName();
+            string originalEnemyName = enemyNameGenerator.GenerateRandomStarName();
+
+            string enemyName = Regex.Replace(originalEnemyName, @"[^a-zA-Z]", "");
+
             if (enemyName.Length > 8)
             {
                 enemyName = enemyName.Substring(0, 8);
