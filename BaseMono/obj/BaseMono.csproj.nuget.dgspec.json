@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\idans\\Desktop\\ICS-3\\Assignments\\FinalProjectPractice\\BaseMono\\BaseMono.csproj": {}
+    "c:\\Users\\idans\\Desktop\\ICS-3\\Assignments\\FinalProjectPractice\\BaseMono\\BaseMono.csproj": {}
   },
   "projects": {
-    "C:\\Users\\idans\\Desktop\\ICS-3\\Assignments\\FinalProjectPractice\\BaseMono\\BaseMono.csproj": {
+    "c:\\Users\\idans\\Desktop\\ICS-3\\Assignments\\FinalProjectPractice\\BaseMono\\BaseMono.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\idans\\Desktop\\ICS-3\\Assignments\\FinalProjectPractice\\BaseMono\\BaseMono.csproj",
+        "projectUniqueName": "c:\\Users\\idans\\Desktop\\ICS-3\\Assignments\\FinalProjectPractice\\BaseMono\\BaseMono.csproj",
         "projectName": "BaseMono",
-        "projectPath": "C:\\Users\\idans\\Desktop\\ICS-3\\Assignments\\FinalProjectPractice\\BaseMono\\BaseMono.csproj",
+        "projectPath": "c:\\Users\\idans\\Desktop\\ICS-3\\Assignments\\FinalProjectPractice\\BaseMono\\BaseMono.csproj",
         "packagesPath": "C:\\Users\\idans\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\idans\\Desktop\\ICS-3\\Assignments\\FinalProjectPractice\\BaseMono\\obj\\",
+        "outputPath": "c:\\Users\\idans\\Desktop\\ICS-3\\Assignments\\FinalProjectPractice\\BaseMono\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\idans\\AppData\\Roaming\\NuGet\\NuGet.Config"
